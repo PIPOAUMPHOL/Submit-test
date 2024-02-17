@@ -1,0 +1,31 @@
+ข้อ 1. ลูกค้าต้องการ software กรอกข้อมูลการได้รับวัคซีนของพนักงานภายในบริษัท และ สามารถแสดง สรุปผลข้อมูลในรูปแบบ graph
+   ให้ออกแบบ Tech stack (frontend, backend) และ ที่ใช้ในการพัฒนา และ software architecture (ติดตั้งแต่ละ service ด้วยอะไรและที่ไหน) พร้อมเหตุผล
+   มีเงื่อนไขดังนี้
+   - เป็น web base
+   - ลูกค้าเน้นใช้งานบน mobile
+   - ลูกค้าไม่มี server เป็นของตัวเอง */
+
+frontend - ใช้ react จัดการฝั่ง UI 
+- ไฟล์ App.jsx จะติดตั้ง react-router-dom เพื่อใช้สร้าง Router เช่น ถ้าเข้าเว็บด้วย path อะไรจะให้ render component ไหน หรือ หน้าไหน
+- ไฟล์ Homepage.jsx ที่จะให้ user กรอกข้อมูลการได้รับวัคซีน ใช้ Hook คือ useState เพื่อเอามาเก็บ Value ที่ user กรอกเข้ามาในฟอร์ม โดยใช้ร่วมกับ event onChange
+   - จากนั้น ติดตั้ง axios เพื่อใช้สร้าง request ไปยัง server กรณีนี้จะใช้ axios.post โดยจะแนบ body คือ ข้อมูลที่ user กรอกเข้ามา เพื่อไปสร้างข้อมูลที่ database
+   - จากนั้นสร้างปุ่มขึ้นมาแล้วใส่ event onClick คือ เมื่อกรอกข้อมูลครบแล้ว แล้วคลิกปุ่มจะสั่งให้ axios.post ทำงาน เมื่อทำงานสำเร็จจะให้ alert ข้อความว่าส่งข้อมูลเรียบร้อย
+   - อาจจะเช็คเงื่อนไขว่าถ้าไม่กรอกข้อมูลมาในฟอร์มไหน จะให้ alert ข้อความว่ากรุณากรอกข้อมูล
+   - สร้างปุ่มในหน้า Homepage.jsx เมื่อกดแล้วให้ Redirect ไปยังหน้า VaccinationDataGraph.jsx
+- ไฟล์ VaccinationDataGraph.jsx จะติดตั้ง axios เพื่อใช้สร้าง request ไปยัง server กรณีนี้ใช้ axios.get เพื่อไปดึงข้อมูลจาก database และเอามา render เป็น graph สรุปข้อมูล
+   - ใช้ Hook คือ useState เพื่อเอามาเก็บ Value ที่ fetch มาจาก database
+   - - สร้างปุ่มในหน้า VaccinationDataGraph.jsx เมื่อกดแล้วให้ Redirect ไปยังหน้า Homepage.jsx
+** ในฝั่ง client จะสร้างโฟล์เดอร์ชื่อ components ที่เอาไว้เก็บ component ต่างๆ ที่จะเอาไป render เพื่อแสดงผลเป็นหน้าต่างๆ ซึ่งไฟล์และโฟล์เดอร์ทั้งหมดจะอยู่ในโฟล์เดอร์ชื่อ client
+
+backend - ใช้ node.js + express.js + postgreSQL จัดการเรื่อง server + api + database
+- ติดตั้ง express กับ nodemon
+  - express ใช้สร้าง server และ api
+  - nodemon ช่วยในการเริ่มรัน server และ restart server อัตโนมัติเมื่อ save โค้ดใหม่
+- สร้างไฟล์ชื่อ app.js เพื่อเอามาเก็บโค้ดที่ใช้สร้าง server และรัน server
+- สร้างโฟล์เดอร์ apps ขึ้นมา เพื่อเอามาเก็บไฟล์โค้ดที่ใช้สร้าง api โดยเก็บผ่าน router เพื่อที่จะได้สามารถเอาไปใช้ในไฟล์ app.js ได้
+- สร้างโฟล์เดอร์ชื่อ utils เพื่อเอามาเก็บไฟล์โค้ดที่ใช้ในการเชื่อม postgreSQL กับ Node.js
+  - ติดตั้ง pg (npm install pg)
+  - สร้างไฟล์ db.js เพื่อเอามาเก็บโค้ดที่ใช้ในการเชื่อม postgreSQL กับ Node.js เมื่อเชื่อมต่อเสร็จแล้วให้รัน server
+- สร้างไฟล์ในโฟล์เดอร์ apps เพื่อสร้าง API
+  - สร้าง api สำหรับให้ client สามารถดึงข้อมูลจาก database ได้ เพื่อที่จะเอาไปแสดงผลสรุปข้อมูลรูปแบบ graph
+** ฝั่ง server ไฟล์และโฟล์เดอร์ทั้งหมดจะอยู่ในโฟล์เดอร์ชื่อ server
